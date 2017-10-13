@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      /* CSS variables */
+      html {
+        --c-dark: #777;
+        --c-light: #333;
+        --c-drop-shadow: #999;
+      }
+ 
+      /* Global styles - only inheritable props will be used by our components!! :D */
+      html {
+        background: black;
+        color: white;
+      }
+      body {
+        margin: 0;
+        font-family: 'Helvetica', sans-serif;
+      }
+    </style>
+
+    <!-- This is effectively what you would see in the imports section of a normal React/Redux app -->
+    <script type="text/javascript">
+
+      // Current:
+      // Init store -> Render -> Actions (called from DOM) -> Update store -> Re-render
+
+      // Better?:
+      // Init store
+      //   -> Render
+      //   -> Dispatch action to store (called from DOM)
+      //   -> Run action(s) with store data
+      //   -> Update store
+      //   -> Re-render
+
+      const render = (component, parent = document.body) => {
+        if (parent) {
+          parent.innerHTML = `<${component}></${component}>`
+        }
+      };
+
+      const store = (() => {
+        let currentState;
+        let subscribers = [];
+
+        // This would be much better as a .subscribe method. Whole store needs to be rearchitected.
+        return (newState, subscriber) => {
+          if (subscriber) {
+            subscribers.push(subscriber);
+          }
+          if (newState) {
+            subscribers.forEach(s => s(currentState, newState));
+            currentState = newState;
+            render("app-stage");
+          }
+          return currentState;
+        }
+      })();
+
+      // A combination of reducers and actions... for simplicities sake.
+      // If we were to take this to prod we might want to make an action creator that takes a store.
+      // Same thing for the ConnectedElement. That way we can have multiple stores (if we ever need that).
+      const actions = {
+        addTitle(newTitle){
+          let state = Object.assign({}, store());
+          state.titles.push(newTitle);
+          store(state);
+        },
+      }
+
+      class ConnectedElement extends HTMLElement {
+        constructor() {
+          super();
+        }
+
+        getState() {
+          return Object.freeze(store());
+        }
+
+        dispatch(action, data) {
+          if (actions[action]){
+            actions[action](data);
+          } else {
+            throw new Error(`No action available with the name "${action}"`);
+          }
+        }
+      }
+    </script>
+
+    <!-- ...and these are our components... -->
+    <script type="text/javascript" src="./components/App.js"></script>
+    <script type="text/javascript" src="./components/SimpleButton.js"></script>
+    <script type="text/javascript" src="./components/SiteMenu.js"></script>
+    <script type="text/javascript" src="./components/SimpleCard.js"></script>
+    <script type="text/javascript" src="./components/SimpleCardGrid.js"></script>
+    <script type="text/javascript" src="./components/CardAdder.js"></script>
+
+    <!-- ...and this is kick off! -->
+    <script type="text/javascript">
+      const initialState = {
+        titles: ["Buy milk", "Call Sarah", "Pay bills"]
+      };
+
+      store(initialState, (oldState, newState) => {
+        console.log(oldState, newState);
+      });
+    </script>
+  </head>
+  <body>
+    <app-stage></app-stage>
+  </body>
+</html>
