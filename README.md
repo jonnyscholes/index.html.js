@@ -23,6 +23,8 @@ I would welcome any comments or suggestions! I'm sure there are other bleeding e
 
 ## TODO
 
+- Reconsider how state is made available
+- Work out if and how to give each component a local state that then forces that component to re-render if changed
 - Connected it to some (stubbed) API using the deliciousness of async/await <3
 - Play with page routing
 - Play with page to page transitions
