@@ -1,8 +1,8 @@
 class App extends HTMLElement {
  constructor() {
    super();
-   const root = this.attachShadow({mode: "open"});
-   root.innerHTML = `
+   this.attachShadow({mode: "open"});
+   this.shadowRoot.innerHTML = `
      <site-menu>
        <li>Item 1</li>
        <li>Item 2</li>

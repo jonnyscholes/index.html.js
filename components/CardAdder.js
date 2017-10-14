@@ -1,11 +1,12 @@
  class CardAdder extends ConnectedElement {
   constructor() {
     super();
-    const root = this.attachShadow({mode: "open"});
+
+    this.attachShadow({mode: "open"});
     const globalState = this.getState();
 
     // TODO Should this be elsewhere in this class for clarity? Ala Component.render from React.
-    root.innerHTML = `
+    this.shadowRoot.innerHTML = `
       <simple-card-grid>
         <simple-button label="Add"></simple-button>
         ${globalState.titles.map((title, index) => `
