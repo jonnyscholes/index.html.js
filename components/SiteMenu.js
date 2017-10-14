@@ -50,6 +50,8 @@ class SiteMenu extends HTMLElement {
     this._menuTrigger.addEventListener('click', this._onMenuClick.bind(this));
   }
 
+  // TODO This is the main sticking appraoch... solved by vdom in React et al.
+  // Review what other non-vdom solutions use to find a light no-dep required solution.
   _onMenuClick() {
     if (this.hasAttribute('open')) {
       this.removeAttribute('open');

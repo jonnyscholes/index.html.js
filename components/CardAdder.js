@@ -2,12 +2,13 @@
   constructor() {
     super();
     const root = this.attachShadow({mode: "open"});
-    const state = this.getState();
+    const globalState = this.getState();
 
+    // TODO Should this be elsewhere in this class for clarity? Ala Component.render from React.
     root.innerHTML = `
       <simple-card-grid>
-        <button>Add</button>
-        ${state.titles.map((title, index) => `
+        <simple-button label="Add"></simple-button>
+        ${globalState.titles.map((title, index) => `
           <simple-card>${title}</simple-card>
         `).join("")}
       </simple-card-grid>
@@ -15,11 +16,11 @@
   }
 
   connectedCallback() {
-    this.shadowRoot.querySelector('button').addEventListener('click', this._onAdd.bind(this));
+    this.shadowRoot.querySelector('simple-button').addEventListener('click', this._onAdd.bind(this));
   }
 
   disconnectedCallback() {
-    this.shadowRoot.querySelector('button').removeEventListener('click', this._onAdd);
+    this.shadowRoot.querySelector('simple-button').removeEventListener('click', this._onAdd);
   }
 
   _onAdd() {
