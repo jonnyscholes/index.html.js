@@ -30,7 +30,7 @@ siteMenuTemplate.innerHTML = `
       transform: translateX(0);
     }
   </style>
-  <simple-button>Open</simple-button>
+  <simple-button label="Open"></simple-button>
   <ul>
     <slot></slot>
   </ul>
@@ -53,8 +53,10 @@ class SiteMenu extends HTMLElement {
   _onMenuClick() {
     if (this.hasAttribute('open')) {
       this.removeAttribute('open');
+      this._menuTrigger.setAttribute('label', 'Open');
     } else {
       this.setAttribute('open', '');
+      this._menuTrigger.setAttribute('label', 'Close');
     }
   }
 }
